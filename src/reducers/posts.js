@@ -1,6 +1,6 @@
 import { FETCH_ALL, UPDATE, DELETE, CREATE } from "../constants/actionTypes";
 
-const postRed = (posts = [], action) => {
+const postReducer = (posts = [], action) => {
   console.log(`done call ${action.type}`);
   switch (action.type) {
     case FETCH_ALL:
@@ -18,4 +18,5 @@ const postRed = (posts = [], action) => {
       return posts;
   }
 };
-export default postRed;
+
+export default postReducer;
