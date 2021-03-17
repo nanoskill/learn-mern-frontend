@@ -35,14 +35,14 @@ const Auth = () => {
   const history = useHistory();
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.password === formData.confirmPassword) {
-      if (isSignup) {
+    if (isSignup) {
+      if (formData.password === formData.confirmPassword) {
         dispatch(signup(formData, history));
       } else {
-        dispatch(signin(formData, history));
+        alert("Password doesn't match");
       }
     } else {
-      alert("Password doesn't match");
+      dispatch(signin(formData, history));
     }
   };
 

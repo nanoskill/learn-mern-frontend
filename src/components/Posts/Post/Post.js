@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
@@ -29,7 +28,7 @@ const Post = ({ post, setCurrentId }) => {
           title={post.title}
         />
         <div className={classes.overlay}>
-          <Typography variant="h6">{post.creator}</Typography>
+          <Typography variant="h6">{post.name}</Typography>
           <Typography variant="body2">
             {moment(post.createdAt).fromNow()}
           </Typography>
@@ -63,21 +62,12 @@ const Post = ({ post, setCurrentId }) => {
             size="small"
             color="primary"
             onClick={() => {
-              dispatch(likePost(post._id, 1));
+              dispatch(likePost(post._id));
             }}
           >
             <ThumbUpAltIcon fontSize="small" />
             &nbsp;
-            {post.likeCount}
-          </Button>
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => {
-              dispatch(likePost(post._id, -1));
-            }}
-          >
-            <ThumbDownAltIcon fontSize="small" />
+            {post.likes.length}
           </Button>
           <Button
             size="small"

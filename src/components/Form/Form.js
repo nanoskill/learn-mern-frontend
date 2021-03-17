@@ -9,9 +9,24 @@ import { createPost, updatePost } from "../../actions/posts";
 const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
+
+  const [postData, setPostData] = useState({
+    title: "",
+    message: "",
+    tags: "",
+    selectedFile: "",
+  });
+
+  const user = JSON.parse(localStorage.getItem("profile"));
   const clear = () => {
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
@@ -24,24 +39,20 @@ const Form = ({ currentId, setCurrentId }) => {
     if (currentId) {
       dispatch(updatePost(currentId, postData));
     } else {
-      dispatch(createPost(postData));
+      dispatch(createPost({ ...postData, name: user?.result?.name }));
     }
     clear();
   };
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories.
+        </Typography>
+      </Paper>
+    );
+  }
 
-  const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
-  );
-  useEffect(() => {
-    if (post) setPostData(post);
-  }, [post]);
-  const [postData, setPostData] = useState({
-    creator: "",
-    title: "",
-    message: "",
-    tags: "",
-    selectedFile: "",
-  });
   return (
     <Paper className={classes.paper}>
       <form
@@ -53,16 +64,6 @@ const Form = ({ currentId, setCurrentId }) => {
         <Typography variant="h6">
           {currentId ? "Editing" : "Creating"} a Memory
         </Typography>
-        <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        />
         <TextField
           name="title"
           variant="outlined"
@@ -98,7 +99,7 @@ const Form = ({ currentId, setCurrentId }) => {
             onDone={({ base64 }) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
-          ></FileBase>
+          />
         </div>
         <Button
           className={classes.buttonSubmit}
