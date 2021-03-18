@@ -3,6 +3,7 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { Avatar, AppBar, Typography, Toolbar, Button } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { LOGOUT } from "../../constants/actionTypes";
+import decode from "jwt-decode";
 
 import useStyle from "./styles";
 import memories from "../../images/memories.png";
@@ -16,7 +17,10 @@ const Navbar = () => {
   useEffect(() => {
     const token = user?.token;
 
-    //JWT...
+    if (token) {
+      const decodedToken = decode(token);
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [dispatch, location]);
 
